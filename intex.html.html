@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday! 🎉</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding-top: 5vh;
+    }
+
+    .birthday-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 40px 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .balloons {
+      font-size: 60px;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      margin-bottom: 15px;
+      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .name {
+      font-size: 2.8rem;
+      color: #fff;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .message {
+      font-size: 1.3rem;
+      line-height: 1.6;
+      margin: 25px 0;
+      opacity: 0.95;
+    }
+
+    .age {
+      font-size: 3rem;
+      font-weight: 600;
+      color: #ffd700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+      margin: 20px 0;
+    }
+
+    .cake {
+      font-size: 80px;
+      margin: 20px 0;
+      animation: cake-bob 2s ease-in-out infinite;
+    }
+
+    button {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-5px) scale(1.05);
+      background: #ff5252;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    @keyframes cake-bob {
+      0%, 100% { transform: scale(1) rotate(-5deg); }
+      50% { transform: scale(1.05) rotate(5deg); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      .name {
+        font-size: 2.2rem;
+      }
+      .age {
+        font-size: 3.8rem;
+      }
+      .birthday-card {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti"></canvas>
+
+  <div class="container">
+    <div class="birthday-card">
+      <div class="balloons">🎈🎉🎈</div>
+      
+      <h1>Happy Birthday!</h1>
+      
+      <div class="name" id="birthdayName">MATHI</div>
+      
+      <div class="age" id="birthdayAge">23 years 0 months 0 days
+or 276 months 0 days
+or 1200 weeks 1 days
+or 8,401 days</div>
+      
+      <div class="cake">🎂</div>
+      
+      <p class="message" id="birthdayMessage">
+        Enna sollurathunu theriyala yatho inaiku poranthu tholachutta
+        athunala unna summa viduran.Yappudiyo nalla iruntha seri.
+        crct ahh timeku sapta enna di crct ahh saputtu 
+        tholaiya vendiyathuthana crct ahh sapalana sethu pova di 💀💀💀....
+                       PURIUTHA 
+      <p>
+
+      <button id="confettiBtn">🎉 THOTTU PAR!</button>
+    </div>
+
+    <div class="footer">
+      Enna thottu pathiya athu dummy baba battery podala apudieaa varapo AAA size battery 3 vagittu vanga 😂😂😂
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrame;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height - canvas.height;
+        this.size = Math.random() * 14 + 7;
+        this.speedY = Math.random() * 4 + 3;
+        this.speedX = Math.random() * 4 - 2;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = Math.random() * 10 - 5;
+        this.color = `hsl(${Math.random()*360}, 100%, 65%)`;
+        this.shape = Math.random() > 0.5 ? 'circle' : 'rect';
+      }
+
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        this.rotation += this.rotationSpeed;
+        this.speedX += (Math.random() - 0.5) * 0.15;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation * Math.PI / 180);
+        ctx.fillStyle = this.color;
+
+        if (this.shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(-this.size/2, -this.size/3, this.size, this.size*0.6);
+        }
+        ctx.restore();
+      }
+    }
+
+    function createConfetti(count) {
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+
+        if (particles[i].y > canvas.height + 100) {
+          particles.splice(i, 1);
+        }
+      }
+
+      // Continuous gentle confetti
+      if (Math.random() < 0.35) {
+        createConfetti(2);
+      }
+
+      animationFrame = requestAnimationFrame(animate);
+    }
+
+    function launchConfetti() {
+      createConfetti(120);   // Big burst
+    }
+
+    // Initialize everything
+    window.onload = function() {
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      // Start animation
+      createConfetti(50);
+      animate();
+
+      // Button click handler (Fixed version)
+      const btn = document.getElementById('confettiBtn');
+      btn.addEventListener('click', function() {
+        launchConfetti();
+        // Visual feedback
+        this.style.transform = 'scale(0.92)';
+        setTimeout(() => {
+          this.style.transform = 'scale(1)';
+        }, 150);
+      });
+
+      // Occasional auto confetti
+      setInterval(() => {
+        if (Math.random() > 0.4) launchConfetti();
+      }, 7000);
+    };
+  </script>
+</body>
+</html>
